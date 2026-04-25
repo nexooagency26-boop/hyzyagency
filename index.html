@@ -1146,54 +1146,66 @@
       box-shadow: 0 20px 50px rgba(0,0,0,.5);
     }
 
-    .ba-images {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      height: 200px;
+    /* Slider avant/après interactif */
+    .ba-slider {
       position: relative;
-    }
-    .ba-img {
-      position: relative;
+      width: 100%;
+      height: 220px;
       overflow: hidden;
+      cursor: col-resize;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: pan-y;
     }
-    .ba-img-placeholder {
-      width: 100%; height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .65rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-    }
-    .ba-before .ba-img-placeholder {
-      background: linear-gradient(135deg, #1a1a1a, #222);
-      color: var(--grey-dark);
-    }
-    .ba-after .ba-img-placeholder {
-      background: linear-gradient(135deg, rgba(212,175,55,.08), rgba(212,175,55,.04));
-      color: var(--gold);
-    }
-
-    .ba-divider {
+    .ba-sl-before {
       position: absolute;
-      left: 50%; top: 0; bottom: 0;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      pointer-events: none;
+      display: block;
+    }
+    .ba-sl-after {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      background-image: var(--after-img);
+      background-size: cover;
+      background-position: center;
+      clip-path: inset(0 0 0 50%);
+    }
+    .ba-sl-divider {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
       width: 2px;
       background: var(--gold);
-      z-index: 2;
       transform: translateX(-50%);
+      z-index: 4;
+      pointer-events: none;
+      box-shadow: 0 0 12px rgba(212,175,55,.5);
     }
-    .ba-divider-dot {
+    .ba-sl-handle {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 20px; height: 20px;
+      width: 40px; height: 40px;
       border-radius: 50%;
       background: var(--gold);
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 1px;
+      color: var(--black-deep);
+      box-shadow: 0 0 20px rgba(212,175,55,.6), 0 4px 12px rgba(0,0,0,.5);
+      pointer-events: all;
+      cursor: col-resize;
     }
-    .ba-divider-dot svg { width: 10px; height: 10px; stroke: var(--black-deep); fill: none; stroke-width: 2.5; }
+    .ba-slider .ba-label { z-index: 5; top: .6rem; }
+    .ba-slider .ba-before-label { left: .6rem; }
+    .ba-slider .ba-after-label  { right: .6rem; }
+    .ba-card.dragging { transform: none !important; }
 
     .ba-label {
       position: absolute;
@@ -2367,18 +2379,19 @@
 
         <div class="ba-grid">
 
+          <!-- CARTE 1 : Nettoyage de chantier -->
           <article class="ba-card reveal" style="transition-delay:.1s;">
-            <div class="ba-images">
-              <div class="ba-img ba-before">
-                <!-- REMPLACER ICI LES IMAGES AVANT/APRÈS #1 -->
-                <div class="ba-img-placeholder">Avant</div>
-                <span class="ba-label ba-before-label">Avant</span>
+            <div class="ba-slider" data-slider>
+              <img class="ba-sl-before" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Avant — Nettoyage de chantier" loading="lazy">
+              <div class="ba-sl-after" style="--after-img:url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80')"></div>
+              <div class="ba-sl-divider" aria-hidden="true">
+                <div class="ba-sl-handle">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
               </div>
-              <div class="ba-img ba-after">
-                <div class="ba-img-placeholder">Après</div>
-                <span class="ba-label ba-after-label">Après</span>
-              </div>
-              <div class="ba-divider"><div class="ba-divider-dot"><svg viewBox="0 0 24 24"><path d="M8 4l8 8-8 8"/></svg></div></div>
+              <span class="ba-label ba-before-label">Avant</span>
+              <span class="ba-label ba-after-label">Après</span>
             </div>
             <div class="ba-info">
               <div class="ba-service-name">Nettoyage de chantier</div>
@@ -2386,18 +2399,19 @@
             </div>
           </article>
 
+          <!-- CARTE 2 : Entretien extérieur -->
           <article class="ba-card reveal" style="transition-delay:.15s;">
-            <div class="ba-images">
-              <div class="ba-img ba-before">
-                <!-- REMPLACER ICI LES IMAGES AVANT/APRÈS #2 -->
-                <div class="ba-img-placeholder">Avant</div>
-                <span class="ba-label ba-before-label">Avant</span>
+            <div class="ba-slider" data-slider>
+              <img class="ba-sl-before" src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=80" alt="Avant — Entretien extérieur" loading="lazy">
+              <div class="ba-sl-after" style="--after-img:url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80')"></div>
+              <div class="ba-sl-divider" aria-hidden="true">
+                <div class="ba-sl-handle">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
               </div>
-              <div class="ba-img ba-after">
-                <div class="ba-img-placeholder">Après</div>
-                <span class="ba-label ba-after-label">Après</span>
-              </div>
-              <div class="ba-divider"><div class="ba-divider-dot"><svg viewBox="0 0 24 24"><path d="M8 4l8 8-8 8"/></svg></div></div>
+              <span class="ba-label ba-before-label">Avant</span>
+              <span class="ba-label ba-after-label">Après</span>
             </div>
             <div class="ba-info">
               <div class="ba-service-name">Entretien extérieur</div>
@@ -2405,18 +2419,19 @@
             </div>
           </article>
 
+          <!-- CARTE 3 : Remise en état -->
           <article class="ba-card reveal" style="transition-delay:.2s;">
-            <div class="ba-images">
-              <div class="ba-img ba-before">
-                <!-- REMPLACER ICI LES IMAGES AVANT/APRÈS #3 -->
-                <div class="ba-img-placeholder">Avant</div>
-                <span class="ba-label ba-before-label">Avant</span>
+            <div class="ba-slider" data-slider>
+              <img class="ba-sl-before" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80" alt="Avant — Remise en état" loading="lazy">
+              <div class="ba-sl-after" style="--after-img:url('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80')"></div>
+              <div class="ba-sl-divider" aria-hidden="true">
+                <div class="ba-sl-handle">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
               </div>
-              <div class="ba-img ba-after">
-                <div class="ba-img-placeholder">Après</div>
-                <span class="ba-label ba-after-label">Après</span>
-              </div>
-              <div class="ba-divider"><div class="ba-divider-dot"><svg viewBox="0 0 24 24"><path d="M8 4l8 8-8 8"/></svg></div></div>
+              <span class="ba-label ba-before-label">Avant</span>
+              <span class="ba-label ba-after-label">Après</span>
             </div>
             <div class="ba-info">
               <div class="ba-service-name">Remise en état</div>
@@ -3309,6 +3324,53 @@
         document.getElementById('formSuccess').classList.add('show');
       }, 1200);
     });
+
+    /* ============================================================
+       AVANT / APRÈS — DRAG SLIDER
+    ============================================================ */
+    (function () {
+      document.querySelectorAll('[data-slider]').forEach(function (slider) {
+        var afterEl   = slider.querySelector('.ba-sl-after');
+        var divider   = slider.querySelector('.ba-sl-divider');
+        var card      = slider.closest('.ba-card');
+        var isDragging = false;
+
+        function setPosition(x) {
+          var rect = slider.getBoundingClientRect();
+          var pct  = Math.min(100, Math.max(0, ((x - rect.left) / rect.width) * 100));
+          divider.style.left        = pct + '%';
+          afterEl.style.clipPath    = 'inset(0 0 0 ' + pct + '%)';
+        }
+
+        slider.addEventListener('mousedown', function (e) {
+          isDragging = true;
+          card.classList.add('dragging');
+          setPosition(e.clientX);
+          e.preventDefault();
+        });
+        window.addEventListener('mousemove', function (e) {
+          if (!isDragging) return;
+          setPosition(e.clientX);
+        });
+        window.addEventListener('mouseup', function () {
+          if (!isDragging) return;
+          isDragging = false;
+          card.classList.remove('dragging');
+        });
+
+        slider.addEventListener('touchstart', function (e) {
+          isDragging = true;
+          setPosition(e.touches[0].clientX);
+        }, { passive: true });
+        slider.addEventListener('touchmove', function (e) {
+          if (!isDragging) return;
+          setPosition(e.touches[0].clientX);
+        }, { passive: true });
+        slider.addEventListener('touchend', function () {
+          isDragging = false;
+        });
+      });
+    })();
 
     /* ============================================================
        FOOTER YEAR
