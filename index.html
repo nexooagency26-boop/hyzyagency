@@ -1325,6 +1325,21 @@
       color: var(--grey-dark);
     }
 
+    /* Image réelle dans la galerie */
+    .gallery-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* Image réelle dans la lightbox */
+    .lb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
     .gallery-item-overlay {
       position: absolute;
       inset: 0;
@@ -3035,14 +3050,47 @@
        GALLERY
     ============================================================ */
     const galleryItems = [
-      { label: 'Nettoyage chantier',   icon: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>' },
-      { label: 'Après travaux',        icon: '<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>' },
-      { label: 'Intérieur',            icon: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>' },
-      { label: 'Extérieur',            icon: '<circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/><path d="M2 12h20"/>' },
-      { label: 'Outils pro',           icon: '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>' },
-      { label: 'Finition premium',     icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>' },
-      { label: 'Entretien locaux',     icon: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>' },
-      { label: 'Remise en état',       icon: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>' },
+      // 👉 Remplacez uniquement les URL "image" pour changer les photos.
+      {
+        label: 'Nettoyage chantier',
+        image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=700&q=80',
+        icon: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>'
+      },
+      {
+        label: 'Après travaux',
+        image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80',
+        icon: '<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>'
+      },
+      {
+        label: 'Intérieur',
+        image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=700&q=80',
+        icon: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>'
+      },
+      {
+        label: 'Extérieur',
+        image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=700&q=80',
+        icon: '<circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/><path d="M2 12h20"/>'
+      },
+      {
+        label: 'Outils pro',
+        image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=700&q=80',
+        icon: '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>'
+      },
+      {
+        label: 'Finition premium',
+        image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=700&q=80',
+        icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
+      },
+      {
+        label: 'Entretien locaux',
+        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80',
+        icon: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>'
+      },
+      {
+        label: 'Remise en état',
+        image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=700&q=80',
+        icon: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>'
+      },
     ];
 
     const gradients = [
@@ -3059,13 +3107,17 @@
       div.setAttribute('role', 'button');
       div.setAttribute('aria-label', 'Voir ' + item.label);
       const bg = gradients[index % gradients.length];
+
+      // Contenu interne : image réelle ou placeholder SVG
+      const inner = item.image
+        ? `<img class="gallery-img" src="${item.image}" alt="${item.label}" loading="lazy">`
+        : `<div class="gallery-item-placeholder" style="background:${bg};">
+             <svg width="28" height="28" viewBox="0 0 24 24" stroke-width="1.2" stroke="rgba(212,175,55,.5)" fill="none">${item.icon}</svg>
+             <span>${item.label}</span>
+           </div>`;
+
       div.innerHTML = `
-        <div class="gallery-item-img">
-          <div class="gallery-item-placeholder" style="background:${bg};">
-            <svg width="28" height="28" viewBox="0 0 24 24" stroke-width="1.2" stroke="rgba(212,175,55,.5)" fill="none">${item.icon}</svg>
-            <span>${item.label}</span>
-          </div>
-        </div>
+        <div class="gallery-item-img">${inner}</div>
         <div class="gallery-item-overlay">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M15 3h6v6M14 10l6-7M9 21H3v-6M10 14l-7 7"/></svg>
         </div>`;
@@ -3093,7 +3145,7 @@
     const lightboxClose = document.getElementById('lightboxClose');
     const lightboxPrev  = document.getElementById('lightboxPrev');
     const lightboxNext  = document.getElementById('lightboxNext');
-    const lightboxCaption = document.getElementById('lightboxCaption');
+    let lightboxCaption = document.getElementById('lightboxCaption');
 
     function openLightbox(index) {
       currentLightboxIndex = index;
@@ -3110,7 +3162,22 @@
 
     function updateLightbox() {
       const item = galleryItems[currentLightboxIndex];
+      const wrap = document.getElementById('lightboxImgWrap');
       lightboxCaption.textContent = item.label;
+
+      if (item.image) {
+        wrap.innerHTML = `
+          <img class="lb-img" src="${item.image}" alt="${item.label}">
+          <span id="lightboxCaption">${item.label}</span>`;
+      } else {
+        wrap.innerHTML = `
+          <div class="lb-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+            <span id="lightboxCaption">${item.label}</span>
+          </div>`;
+      }
+      // Reassign reference after DOM rebuild
+      lightboxCaption = document.getElementById('lightboxCaption');
     }
 
     function prevLightbox() {
