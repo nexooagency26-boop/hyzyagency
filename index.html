@@ -1124,7 +1124,7 @@
     .step-mobile-desc { font-size: .82rem; color: var(--grey); line-height: 1.7; }
 
     /* ============================================================
-       BEFORE/AFTER
+       BEFORE / AFTER — 3 CARTES AVEC COMPARATEUR GLISSANT
     ============================================================ */
     #beforeafter {
       padding: 8rem 0;
@@ -1132,108 +1132,134 @@
       position: relative;
       overflow: hidden;
     }
-
     .ba-header {
       text-align: center;
       margin-bottom: 5rem;
     }
     .ba-header .section-label { justify-content: center; }
-    .ba-header .gold-divider { margin: 1.5rem auto; }
+    .ba-header .gold-divider  { margin: 1.5rem auto; }
 
+    /* Grille 3 cartes */
     .ba-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
     }
+    @media (max-width: 900px) { .ba-grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; } }
 
+    /* Carte */
     .ba-card {
       border: 1px solid rgba(212,175,55,.12);
-      border-radius: 4px;
+      border-radius: 6px;
       overflow: hidden;
-      position: relative;
-      transition: var(--transition);
+      transition: border-color .3s, transform .3s, box-shadow .3s;
     }
     .ba-card:hover {
-      border-color: rgba(212,175,55,.3);
+      border-color: rgba(212,175,55,.35);
       transform: translateY(-4px);
       box-shadow: 0 20px 50px rgba(0,0,0,.5);
     }
 
-    .ba-images {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      height: 200px;
+    /* Zone comparateur */
+    .ba-compare {
       position: relative;
-    }
-    .ba-img {
-      position: relative;
+      width: 100%;
+      height: 220px;
       overflow: hidden;
+      cursor: col-resize;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: pan-y;
     }
-    .ba-img-placeholder {
+    @media (max-width: 900px) { .ba-compare { height: 260px; } }
+
+    /* Image AVANT — fond complet */
+    .ba-img-before {
+      position: absolute;
+      inset: 0;
       width: 100%; height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .65rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-    }
-    .ba-before .ba-img-placeholder {
-      background: linear-gradient(135deg, #1a1a1a, #222);
-      color: var(--grey-dark);
-    }
-    .ba-after .ba-img-placeholder {
-      background: linear-gradient(135deg, rgba(212,175,55,.08), rgba(212,175,55,.04));
-      color: var(--gold);
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      pointer-events: none;
     }
 
-    .ba-divider {
+    /* Image APRÈS — révélée par clip-path */
+    .ba-img-after {
       position: absolute;
-      left: 50%; top: 0; bottom: 0;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      pointer-events: none;
+      clip-path: inset(0 50% 0 0);
+    }
+
+    /* Ligne de séparation */
+    .ba-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
       width: 2px;
       background: var(--gold);
-      z-index: 2;
       transform: translateX(-50%);
+      z-index: 4;
+      pointer-events: none;
+      box-shadow: 0 0 12px rgba(212,175,55,.55);
     }
-    .ba-divider-dot {
+
+    /* Poignée */
+    .ba-handle {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 20px; height: 20px;
+      width: 42px; height: 42px;
       border-radius: 50%;
       background: var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
+      gap: 2px;
+      color: var(--black-deep);
+      box-shadow: 0 0 22px rgba(212,175,55,.65), 0 4px 12px rgba(0,0,0,.5);
+      pointer-events: all;
+      cursor: col-resize;
+      z-index: 5;
     }
-    .ba-divider-dot svg { width: 10px; height: 10px; stroke: var(--black-deep); fill: none; stroke-width: 2.5; }
+    .ba-handle svg { width: 14px; height: 14px; stroke: var(--black-deep); fill: none; stroke-width: 2.5; }
 
-    .ba-label {
+    /* Labels */
+    .ba-lbl {
       position: absolute;
-      top: .5rem;
+      top: .6rem;
       font-size: .55rem;
       letter-spacing: .2em;
       text-transform: uppercase;
       padding: .2rem .5rem;
       border-radius: 2px;
+      z-index: 6;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
     }
-    .ba-before-label { left: .5rem; background: rgba(0,0,0,.5); color: var(--grey-dark); }
-    .ba-after-label  { right: .5rem; background: rgba(212,175,55,.15); color: var(--gold); }
+    .ba-lbl-b { left: .6rem;  background: rgba(0,0,0,.55);      color: var(--grey); }
+    .ba-lbl-a { right: .6rem; background: rgba(212,175,55,.18); color: var(--gold); }
 
+    /* Infos carte */
     .ba-info {
-      padding: 1.25rem;
-      background: rgba(10,10,10,.9);
+      padding: 1.2rem 1.25rem;
+      background: rgba(10,10,10,.95);
+      border-top: 1px solid rgba(212,175,55,.08);
     }
     .ba-service-name {
       font-family: var(--font-display);
       font-size: 1rem;
       color: var(--off-white);
-      margin-bottom: .25rem;
+      margin-bottom: .2rem;
     }
-    .ba-service-desc {
-      font-size: .75rem;
-      color: var(--grey);
-    }
+    .ba-service-desc { font-size: .75rem; color: var(--grey); line-height: 1.6; }
+
+    /* Empêche le hover carte pendant le drag */
+    .ba-card.ba-dragging { transform: none !important; }
+
 
     /* ============================================================
        GALLERY
@@ -1882,9 +1908,109 @@
       .float-card { display: none; }
       .why-stats { grid-template-columns: 1fr; }
     }
+
+    /* ============================================================
+       RESPONSIVE — SLIDER BA (mobile)
+    ============================================================ */
+    @media (max-width: 768px) {
+      .ba-slider { height: 180px; }
+      .ba-sl-handle { width: 34px; height: 34px; }
+    }
+    @media (max-width: 480px) {
+      .ba-slider { height: 160px; }
+    }
+
+    /* ============================================================
+       CURSEUR PERSONNALISÉ (desktop uniquement)
+    ============================================================ */
+    @media (hover: hover) and (pointer: fine) {
+      body { cursor: none; }
+      a, button, [data-slider], .service-card, .stat-card, .testi-card, .social-icon, .gallery-item { cursor: none; }
+    }
+    #cursor-dot, #cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 99999;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #cursor-dot {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(212,175,55,.8);
+      transition: transform .12s ease;
+    }
+    #cursor-ring {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(212,175,55,.5);
+      transition: transform .15s ease, width .25s ease, height .25s ease, border-color .25s ease;
+    }
+    #cursor-dot.hovering  { transform: translate(-50%,-50%) scale(2.5); background: var(--gold-light); }
+    #cursor-ring.hovering { width: 52px; height: 52px; border-color: var(--gold); box-shadow: 0 0 18px rgba(212,175,55,.25); }
+
+    /* ============================================================
+       SCROLL PROGRESS BAR
+    ============================================================ */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--champagne));
+      z-index: 9998;
+      box-shadow: 0 0 8px rgba(212,175,55,.5);
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       HOVER ENRICHI — CONTACT DETAILS
+    ============================================================ */
+    .contact-detail {
+      transition: transform .3s ease;
+      border-radius: 4px;
+      padding: .5rem .6rem;
+      margin: -.5rem -.6rem;
+    }
+    .contact-detail:hover { transform: translateX(6px); }
+    .contact-detail:hover .contact-detail-icon {
+      border-color: var(--gold);
+      box-shadow: 0 0 12px rgba(212,175,55,.25);
+    }
+    .contact-detail-icon { transition: border-color .3s, box-shadow .3s; }
+
+    /* ============================================================
+       SHIMMER SUR BTN-PRIMARY
+    ============================================================ */
+    .btn-shimmer {
+      position: absolute;
+      top: 0; left: -120%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      transform: skewX(-20deg);
+      transition: left .55s ease;
+      pointer-events: none;
+    }
+    .btn-primary:hover .btn-shimmer { left: 160%; }
+
+    /* ============================================================
+       TRANSITIONS REVEAL AMÉLIORÉES (cubic-bezier premium)
+    ============================================================ */
+    .reveal       { transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+    .reveal-left  { transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+    .reveal-right { transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+
+    /* ============================================================
+       FOCUS VISIBLE (accessibilité clavier)
+    ============================================================ */
+    :focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
   </style>
 </head>
 <body>
+
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div id="cursor-dot"  aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
 
   <!-- ============================================================
        LOADER
@@ -1924,6 +2050,7 @@
         </nav>
 
         <a href="#contact" class="btn-primary nav-cta" aria-label="Demander un devis">
+          <span class="btn-shimmer" aria-hidden="true"></span>
           Demander un devis
         </a>
 
@@ -1988,6 +2115,7 @@
 
           <div class="hero-btns">
             <a href="#contact" class="btn-primary">
+              <span class="btn-shimmer" aria-hidden="true"></span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.13 2.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
               Demander un devis
             </a>
@@ -1998,7 +2126,7 @@
           </div>
 
           <div class="hero-socials" aria-label="Nous contacter">
-            <span class="hero-socials-label"></span>
+            <span class="hero-socials-label">Retrouvez-nous</span>
             <!-- Instagram -->
             <a href="https://www.instagram.com/hyzy.agency/" class="social-icon" aria-label="Instagram HYZY Agency" rel="noopener noreferrer" target="_blank">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -2387,56 +2515,84 @@
 
         <div class="ba-grid">
 
+          <!-- ══════════════════════════════════════
+               CARTE 1 — Fiition Beton
+               Pour remplacer : changez les attributs src des deux <img>
+          ══════════════════════════════════════ -->
           <article class="ba-card reveal" style="transition-delay:.1s;">
-            <div class="ba-images">
-              <div class="ba-img ba-before">
-                <!-- REMPLACER ICI LES IMAGES AVANT/APRÈS #1 -->
-                <div class="ba-img-placeholder">Avant</div>
-                <span class="ba-label ba-before-label">Avant</span>
+            <div class="ba-compare" data-compare>
+              <!-- IMAGE AVANT carte 1 — remplacez src -->
+              <img class="ba-img-before"
+                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195578/IMG_20260426_104150_gjh3g2.jpg"
+                   alt="Avant — Finition Beton" loading="lazy">
+              <!-- IMAGE APRÈS carte 1 — remplacez src -->
+              <img class="ba-img-after"
+                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195577/IMG_20260426_104153_okcrdi.jpg"
+                   alt="Après — Finition Beton" loading="lazy">
+              <div class="ba-line" aria-hidden="true">
+                <div class="ba-handle">
+                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
               </div>
-              <div class="ba-img ba-after">
-                <div class="ba-img-placeholder">Après</div>
-                <span class="ba-label ba-after-label">Après</span>
-              </div>
-              <div class="ba-divider"><div class="ba-divider-dot"><svg viewBox="0 0 24 24"><path d="M8 4l8 8-8 8"/></svg></div></div>
+              <span class="ba-lbl ba-lbl-b">Avant</span>
+              <span class="ba-lbl ba-lbl-a">Après</span>
             </div>
             <div class="ba-info">
-              <div class="ba-service-name">Nettoyage de chantier</div>
-              <div class="ba-service-desc">Remise en état complète après gros œuvre — sol, murs, menuiseries</div>
+              <div class="ba-service-name">Finition Beton</div>
+              <div class="ba-service-desc">Remise en état complète après petit œuvre — sol, murs, menuiseries</div>
             </div>
           </article>
 
+          <!-- ══════════════════════════════════════
+               CARTE 2 — Chargemment et livraiment et rangement de bois 
+          ══════════════════════════════════════ -->
           <article class="ba-card reveal" style="transition-delay:.15s;">
-            <div class="ba-images">
-              <div class="ba-img ba-before">
-                <!-- REMPLACER ICI LES IMAGES AVANT/APRÈS #2 -->
-                <div class="ba-img-placeholder">Avant</div>
-                <span class="ba-label ba-before-label">Avant</span>
+            <div class="ba-compare" data-compare>
+              <!-- IMAGE AVANT carte 2 — remplacez src -->
+              <img class="ba-img-before"
+                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195825/IMG_20260426_104156_eewqgp.jpg"
+                   alt="Avant — Chargement+Livraison" loading="lazy">
+              <!-- IMAGE APRÈS carte 2 — remplacez src -->
+              <img class="ba-img-after"
+                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195825/IMG_20260426_104159_wxx5b5.jpg"
+                   alt="Après — Aprés livraison et rangement" loading="lazy">
+              <div class="ba-line" aria-hidden="true">
+                <div class="ba-handle">
+                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
               </div>
-              <div class="ba-img ba-after">
-                <div class="ba-img-placeholder">Après</div>
-                <span class="ba-label ba-after-label">Après</span>
-              </div>
-              <div class="ba-divider"><div class="ba-divider-dot"><svg viewBox="0 0 24 24"><path d="M8 4l8 8-8 8"/></svg></div></div>
+              <span class="ba-lbl ba-lbl-b">Avant</span>
+              <span class="ba-lbl ba-lbl-a">Après</span>
             </div>
             <div class="ba-info">
-              <div class="ba-service-name">Entretien extérieur</div>
-              <div class="ba-service-desc">Nettoyage haute pression terrasse & allée — aspect neuf garanti</div>
+              <div class="ba-service-name">Livraison bois et rangement</div>
+              <div class="ba-service-desc">Livraison bois et rangement</div>
             </div>
           </article>
 
+          <!-- ══════════════════════════════════════
+               CARTE 3 — Remise en état
+          ══════════════════════════════════════ -->
           <article class="ba-card reveal" style="transition-delay:.2s;">
-            <div class="ba-images">
-              <div class="ba-img ba-before">
-                <!-- REMPLACER ICI LES IMAGES AVANT/APRÈS #3 -->
-                <div class="ba-img-placeholder">Avant</div>
-                <span class="ba-label ba-before-label">Avant</span>
+            <div class="ba-compare" data-compare>
+              <!-- IMAGE AVANT carte 3 — remplacez src -->
+              <img class="ba-img-before"
+                   src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80"
+                   alt="Avant — Remise en état" loading="lazy">
+              <!-- IMAGE APRÈS carte 3 — remplacez src -->
+              <img class="ba-img-after"
+                   src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80"
+                   alt="Après — Remise en état" loading="lazy">
+              <div class="ba-line" aria-hidden="true">
+                <div class="ba-handle">
+                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
               </div>
-              <div class="ba-img ba-after">
-                <div class="ba-img-placeholder">Après</div>
-                <span class="ba-label ba-after-label">Après</span>
-              </div>
-              <div class="ba-divider"><div class="ba-divider-dot"><svg viewBox="0 0 24 24"><path d="M8 4l8 8-8 8"/></svg></div></div>
+              <span class="ba-lbl ba-lbl-b">Avant</span>
+              <span class="ba-lbl ba-lbl-a">Après</span>
             </div>
             <div class="ba-info">
               <div class="ba-service-name">Remise en état</div>
@@ -3323,6 +3479,51 @@
     });
 
     /* ============================================================
+       AVANT / APRÈS — COMPARATEUR GLISSANT (3 cartes)
+    ============================================================ */
+    (function () {
+      document.querySelectorAll('[data-compare]').forEach(function (wrap) {
+        var imgAfter = wrap.querySelector('.ba-img-after');
+        var line     = wrap.querySelector('.ba-line');
+        var card     = wrap.closest('.ba-card');
+        var active   = false;
+
+        function setPos(clientX) {
+          var rect = wrap.getBoundingClientRect();
+          var pct  = Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
+          line.style.left            = pct + '%';
+          imgAfter.style.clipPath    = 'inset(0 ' + (100 - pct) + '% 0 0)';
+        }
+
+        /* Souris */
+        wrap.addEventListener('mousedown', function (e) {
+          active = true;
+          card.classList.add('ba-dragging');
+          setPos(e.clientX);
+          e.preventDefault();
+        });
+        window.addEventListener('mousemove', function (e) {
+          if (active) setPos(e.clientX);
+        });
+        window.addEventListener('mouseup', function () {
+          if (!active) return;
+          active = false;
+          card.classList.remove('ba-dragging');
+        });
+
+        /* Tactile */
+        wrap.addEventListener('touchstart', function (e) {
+          active = true;
+          setPos(e.touches[0].clientX);
+        }, { passive: true });
+        wrap.addEventListener('touchmove', function (e) {
+          if (active) setPos(e.touches[0].clientX);
+        }, { passive: true });
+        wrap.addEventListener('touchend', function () { active = false; });
+      });
+    })();
+
+    /* ============================================================
        FOOTER YEAR
     ============================================================ */
     document.getElementById('footerYear').textContent = new Date().getFullYear();
@@ -3340,6 +3541,110 @@
         window.scrollTo({ top: y, behavior: 'smooth' });
       });
     });
+
+    /* ============================================================
+       SCROLL PROGRESS BAR
+    ============================================================ */
+    (function () {
+      const bar = document.getElementById('scroll-progress');
+      if (!bar) return;
+      window.addEventListener('scroll', function () {
+        const scrolled = window.scrollY;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (max > 0 ? (scrolled / max) * 100 : 0) + '%';
+      }, { passive: true });
+    })();
+
+    /* ============================================================
+       CURSEUR PERSONNALISÉ (desktop uniquement)
+    ============================================================ */
+    (function () {
+      const dot  = document.getElementById('cursor-dot');
+      const ring = document.getElementById('cursor-ring');
+      if (!dot || !ring) return;
+      if (window.matchMedia('(hover: none)').matches) return;
+
+      let mx = -100, my = -100;
+      let rx = -100, ry = -100;
+      let rafId;
+
+      document.addEventListener('mousemove', function (e) {
+        mx = e.clientX; my = e.clientY;
+        dot.style.transform  = 'translate(' + mx + 'px,' + my + 'px) translate(-50%,-50%)';
+        if (!rafId) rafId = requestAnimationFrame(animateRing);
+      }, { passive: true });
+
+      function animateRing () {
+        rafId = null;
+        rx += (mx - rx) * 0.18;
+        ry += (my - ry) * 0.18;
+        ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
+        if (Math.abs(mx - rx) > 0.5 || Math.abs(my - ry) > 0.5) {
+          rafId = requestAnimationFrame(animateRing);
+        }
+      }
+
+      const hoverTargets = 'a, button, [data-slider], .service-card, .stat-card, .testi-card, .social-icon, .gallery-item, .ba-sl-handle, input, textarea, select';
+      document.addEventListener('mouseover', function (e) {
+        if (e.target.closest(hoverTargets)) {
+          dot.classList.add('hovering');
+          ring.classList.add('hovering');
+        }
+      });
+      document.addEventListener('mouseout', function (e) {
+        if (e.target.closest(hoverTargets)) {
+          dot.classList.remove('hovering');
+          ring.classList.remove('hovering');
+        }
+      });
+
+      document.addEventListener('mouseleave', function () {
+        dot.style.opacity  = '0';
+        ring.style.opacity = '0';
+      });
+      document.addEventListener('mouseenter', function () {
+        dot.style.opacity  = '1';
+        ring.style.opacity = '1';
+      });
+    })();
+
+    /* ============================================================
+       COUNTER ANIMATION (chiffres clés — section WHY)
+    ============================================================ */
+    (function () {
+      function animateCount (el, target, suffix, duration) {
+        let start = 0;
+        const step = (timestamp) => {
+          if (!start) start = timestamp;
+          const progress = Math.min((timestamp - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.floor(eased * target) + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+
+      const counters = document.querySelectorAll('.stat-number');
+      const seen = new Set();
+      const obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting || seen.has(entry.target)) return;
+          seen.add(entry.target);
+          const el = entry.target;
+          const raw = el.textContent.trim();
+          const match = raw.match(/^(\+?)(\d+)(%?)(\+?)$/);
+          if (!match) return;
+          const prefix   = match[1];
+          const num      = parseInt(match[2], 10);
+          const pct      = match[3];
+          const plusEnd  = match[4];
+          const suffix   = pct || (plusEnd ? '+' : (prefix === '+' ? '' : ''));
+          animateCount(el, num, (prefix === '+' ? '' : '') + suffix, 1600);
+        });
+      }, { threshold: 0.5 });
+
+      counters.forEach(function (el) { obs.observe(el); });
+    })();
 
   </script>
 
