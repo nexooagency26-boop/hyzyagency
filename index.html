@@ -1124,7 +1124,7 @@
     .step-mobile-desc { font-size: .82rem; color: var(--grey); line-height: 1.7; }
 
     /* ============================================================
-       BEFORE / AFTER — 3 CARTES AVEC COMPARATEUR GLISSANT
+       BEFORE / AFTER — COMPARATEUR LUXE
     ============================================================ */
     #beforeafter {
       padding: 8rem 0;
@@ -1132,6 +1132,22 @@
       position: relative;
       overflow: hidden;
     }
+    /* Halo ambiant animé */
+    #beforeafter::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(212,175,55,.04) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      animation: baHalo 8s ease-in-out infinite alternate;
+    }
+    @keyframes baHalo {
+      0%   { opacity: .4; transform: translate(-50%,-50%) scale(1); }
+      100% { opacity: 1;  transform: translate(-50%,-50%) scale(1.3); }
+    }
+
     .ba-header {
       text-align: center;
       margin-bottom: 5rem;
@@ -1139,52 +1155,63 @@
     .ba-header .section-label { justify-content: center; }
     .ba-header .gold-divider  { margin: 1.5rem auto; }
 
-    /* Grille 3 cartes */
+    /* ── Grille ── */
     .ba-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
+      gap: 2rem;
     }
-    @media (max-width: 900px) { .ba-grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; } }
+    @media (max-width: 1024px) { .ba-grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; gap: 2.5rem; } }
 
-    /* Carte */
+    /* ── Carte ── */
     .ba-card {
-      border: 1px solid rgba(212,175,55,.12);
-      border-radius: 6px;
+      border: 1px solid rgba(212,175,55,.1);
+      border-radius: 8px;
       overflow: hidden;
-      transition: border-color .3s, transform .3s, box-shadow .3s;
+      background: var(--black-charcoal);
+      transition: border-color .5s cubic-bezier(.22,1,.36,1),
+                  transform     .5s cubic-bezier(.22,1,.36,1),
+                  box-shadow    .5s cubic-bezier(.22,1,.36,1);
+      position: relative;
+    }
+    /* Ligne dorée top au hover */
+    .ba-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity .5s ease;
+      z-index: 10;
     }
     .ba-card:hover {
-      border-color: rgba(212,175,55,.35);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 50px rgba(0,0,0,.5);
+      border-color: rgba(212,175,55,.38);
+      transform: translateY(-6px);
+      box-shadow: 0 28px 60px rgba(0,0,0,.6), 0 0 40px rgba(212,175,55,.08);
+    }
+    .ba-card:hover::before { opacity: 1; }
+    .ba-card.ba-dragging {
+      transform: none !important;
+      box-shadow: 0 0 0 2px rgba(212,175,55,.5), 0 28px 60px rgba(0,0,0,.6) !important;
     }
 
-    /* Zone comparateur */
+    /* ── Zone comparateur ── */
     .ba-compare {
       position: relative;
       width: 100%;
-      height: 220px;
+      height: 240px;
       overflow: hidden;
       cursor: col-resize;
       user-select: none;
       -webkit-user-select: none;
       touch-action: pan-y;
+      background: #0a0a0a;
     }
-    @media (max-width: 900px) { .ba-compare { height: 260px; } }
+    @media (max-width: 1024px) { .ba-compare { height: 280px; } }
 
-    /* Image AVANT — fond complet */
-    .ba-img-before {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-      pointer-events: none;
-    }
-
-    /* Image APRÈS — révélée par clip-path */
+    /* Images */
+    .ba-img-before,
     .ba-img-after {
       position: absolute;
       inset: 0;
@@ -1193,76 +1220,166 @@
       object-position: center;
       display: block;
       pointer-events: none;
-      clip-path: inset(0 50% 0 0);
     }
+    /* L'image AVANT est complète en dessous */
+    .ba-img-before { z-index: 1; }
+    /* L'image APRÈS est révélée à droite de la barre */
+    .ba-img-after  { z-index: 2; clip-path: inset(0 50% 0 0); }
 
-    /* Ligne de séparation */
+    /* Teinte chaude sur l'avant */
+    .ba-img-before { filter: brightness(.85) sepia(.08); }
+    /* Image après : pleine luminosité */
+    .ba-img-after  { filter: brightness(1); }
+
+    /* ── Ligne séparatrice ── */
     .ba-line {
       position: absolute;
       top: 0; bottom: 0;
       left: 50%;
       width: 2px;
-      background: var(--gold);
+      background: linear-gradient(to bottom, transparent 0%, var(--gold) 10%, var(--gold) 90%, transparent 100%);
       transform: translateX(-50%);
-      z-index: 4;
+      z-index: 5;
       pointer-events: none;
-      box-shadow: 0 0 12px rgba(212,175,55,.55);
+      box-shadow: 0 0 16px rgba(212,175,55,.7), 0 0 40px rgba(212,175,55,.2);
+    }
+    /* Halo sur la ligne */
+    .ba-line::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: 10px;
+      left: -4px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,.12), transparent);
+      pointer-events: none;
     }
 
-    /* Poignée */
+    /* ── Poignée ── */
     .ba-handle {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 42px; height: 42px;
+      width: 46px; height: 46px;
       border-radius: 50%;
-      background: var(--gold);
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
       display: flex; align-items: center; justify-content: center;
-      gap: 2px;
-      color: var(--black-deep);
-      box-shadow: 0 0 22px rgba(212,175,55,.65), 0 4px 12px rgba(0,0,0,.5);
+      gap: 3px;
+      box-shadow:
+        0 0 0 3px rgba(212,175,55,.25),
+        0 0 30px rgba(212,175,55,.7),
+        0 6px 20px rgba(0,0,0,.6);
       pointer-events: all;
       cursor: col-resize;
-      z-index: 5;
+      z-index: 6;
+      animation: handlePulse 2.5s ease-in-out infinite;
     }
-    .ba-handle svg { width: 14px; height: 14px; stroke: var(--black-deep); fill: none; stroke-width: 2.5; }
+    @keyframes handlePulse {
+      0%,100% { box-shadow: 0 0 0 3px rgba(212,175,55,.25), 0 0 30px rgba(212,175,55,.7), 0 6px 20px rgba(0,0,0,.6); }
+      50%      { box-shadow: 0 0 0 6px rgba(212,175,55,.12), 0 0 45px rgba(212,175,55,.9), 0 6px 20px rgba(0,0,0,.6); }
+    }
+    .ba-card.ba-dragging .ba-handle { animation: none; }
+    .ba-handle svg {
+      width: 13px; height: 13px;
+      stroke: var(--black-deep);
+      fill: none;
+      stroke-width: 2.5;
+      flex-shrink: 0;
+    }
 
-    /* Labels */
+    /* ── Hint "glissez" au chargement ── */
+    .ba-hint {
+      position: absolute;
+      bottom: .8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .5rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: rgba(212,175,55,.7);
+      background: rgba(0,0,0,.5);
+      backdrop-filter: blur(4px);
+      padding: .2rem .7rem;
+      border-radius: 20px;
+      border: 1px solid rgba(212,175,55,.2);
+      z-index: 7;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity .4s ease;
+    }
+    .ba-card.ba-dragging .ba-hint,
+    .ba-compare.ba-used   .ba-hint { opacity: 0; }
+
+    /* ── Labels AVANT / APRÈS ── */
     .ba-lbl {
       position: absolute;
-      top: .6rem;
-      font-size: .55rem;
-      letter-spacing: .2em;
+      top: .7rem;
+      font-size: .52rem;
+      letter-spacing: .22em;
       text-transform: uppercase;
-      padding: .2rem .5rem;
-      border-radius: 2px;
-      z-index: 6;
+      padding: .25rem .65rem;
+      border-radius: 20px;
+      z-index: 7;
       pointer-events: none;
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(6px);
+      border: 1px solid transparent;
+      transition: opacity .3s ease;
     }
-    .ba-lbl-b { left: .6rem;  background: rgba(0,0,0,.55);      color: var(--grey); }
-    .ba-lbl-a { right: .6rem; background: rgba(212,175,55,.18); color: var(--gold); }
+    .ba-lbl-b {
+      left: .7rem;
+      background: rgba(0,0,0,.6);
+      color: rgba(255,255,255,.65);
+      border-color: rgba(255,255,255,.1);
+    }
+    .ba-lbl-a {
+      right: .7rem;
+      background: rgba(212,175,55,.15);
+      color: var(--gold);
+      border-color: rgba(212,175,55,.3);
+    }
 
-    /* Infos carte */
+    /* ── Infos bas de carte ── */
     .ba-info {
-      padding: 1.2rem 1.25rem;
-      background: rgba(10,10,10,.95);
-      border-top: 1px solid rgba(212,175,55,.08);
+      padding: 1.3rem 1.4rem 1.2rem;
+      background: rgba(8,8,8,.98);
+      border-top: 1px solid rgba(212,175,55,.07);
+      position: relative;
     }
+    .ba-info::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 1.4rem;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      transition: width .5s cubic-bezier(.22,1,.36,1);
+    }
+    .ba-card:hover .ba-info::before { width: calc(100% - 2.8rem); }
+
     .ba-service-name {
       font-family: var(--font-display);
-      font-size: 1rem;
+      font-size: 1.05rem;
       color: var(--off-white);
-      margin-bottom: .2rem;
+      margin-bottom: .3rem;
+      letter-spacing: .03em;
     }
-    .ba-service-desc { font-size: .75rem; color: var(--grey); line-height: 1.6; }
+    .ba-service-desc {
+      font-size: .74rem;
+      color: var(--grey);
+      line-height: 1.65;
+    }
 
-    /* Empêche le hover carte pendant le drag */
-    .ba-card.ba-dragging { transform: none !important; }
-
+    /* ── Number badge ── */
+    .ba-num {
+      position: absolute;
+      top: 1.1rem; right: 1.1rem;
+      font-family: var(--font-display);
+      font-size: .62rem;
+      color: rgba(212,175,55,.45);
+      letter-spacing: .15em;
+    }
 
     /* ============================================================
-       GALLERY
+       GALLERY — PREMIUM MOTION DESIGN
     ============================================================ */
     #gallery {
       padding: 8rem 0;
@@ -1283,7 +1400,7 @@
       margin-bottom: 4rem;
     }
     .gallery-header .section-label { justify-content: center; }
-    .gallery-header .gold-divider { margin: 1.5rem auto; }
+    .gallery-header .gold-divider  { margin: 1.5rem auto; }
 
     .gallery-marquee-wrap {
       position: relative;
@@ -1295,23 +1412,23 @@
       content: '';
       position: absolute;
       top: 0; bottom: 0;
-      width: 100px;
+      width: 120px;
       z-index: 2;
       pointer-events: none;
     }
     .gallery-marquee-wrap::before {
       left: 0;
-      background: linear-gradient(90deg, var(--black-charcoal), transparent);
+      background: linear-gradient(90deg, var(--black-charcoal) 30%, transparent);
     }
     .gallery-marquee-wrap::after {
       right: 0;
-      background: linear-gradient(-90deg, var(--black-charcoal), transparent);
+      background: linear-gradient(-90deg, var(--black-charcoal) 30%, transparent);
     }
 
     .gallery-track {
       display: flex;
       gap: 1rem;
-      animation: marquee 30s linear infinite;
+      animation: marquee 40s linear infinite;
       width: max-content;
     }
     .gallery-track.reverse { animation-direction: reverse; }
@@ -1322,32 +1439,116 @@
       100% { transform: translateX(-50%); }
     }
 
+    /* ── Item ── */
     .gallery-item {
-      width: 260px;
-      height: 180px;
+      width: 300px;
+      height: 200px;
       flex-shrink: 0;
       border: 1px solid rgba(212,175,55,.12);
-      border-radius: 3px;
+      border-radius: 5px;
       overflow: hidden;
       cursor: pointer;
       position: relative;
-      transition: var(--transition);
+      transition: border-color .4s cubic-bezier(.22,1,.36,1),
+                  box-shadow    .4s cubic-bezier(.22,1,.36,1),
+                  transform     .4s cubic-bezier(.22,1,.36,1);
     }
     .gallery-item:hover {
-      border-color: rgba(212,175,55,.4);
-      box-shadow: var(--glow-sm);
+      border-color: rgba(212,175,55,.5);
+      box-shadow: 0 0 30px rgba(212,175,55,.2), 0 20px 40px rgba(0,0,0,.6);
+      transform: translateY(-5px) scale(1.02);
+      z-index: 2;
     }
-    .gallery-item:hover .gallery-item-overlay { opacity: 1; }
-    .gallery-item:hover .gallery-item-img { transform: scale(1.05); }
 
+    /* ── Image réelle ── */
     .gallery-item-img {
       width: 100%; height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform .4s ease;
       position: relative;
+      overflow: hidden;
     }
+    .gallery-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transform: scale(1.0);
+      transition: transform .7s cubic-bezier(.22,1,.36,1);
+      will-change: transform;
+    }
+    .gallery-item:hover .gallery-img {
+      transform: scale(1.1);
+    }
+
+    /* ── Overlay premium ── */
+    .gallery-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,.85) 0%,
+        rgba(0,0,0,.4)  45%,
+        rgba(212,175,55,.06) 100%
+      );
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 1.1rem 1.1rem .9rem;
+      opacity: 0;
+      transition: opacity .4s cubic-bezier(.22,1,.36,1);
+    }
+    .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+
+    /* ── Titre overlay ── */
+    .gallery-overlay-title {
+      font-family: var(--font-display);
+      font-size: .8rem;
+      color: var(--off-white);
+      letter-spacing: .08em;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform .4s .05s cubic-bezier(.22,1,.36,1),
+                  opacity   .4s .05s ease;
+      margin-bottom: .35rem;
+    }
+    .gallery-overlay-line {
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      box-shadow: 0 0 6px rgba(212,175,55,.5);
+      transition: width .4s .12s cubic-bezier(.22,1,.36,1);
+    }
+    .gallery-overlay-icon {
+      position: absolute;
+      top: .8rem; right: .8rem;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(212,175,55,.15);
+      border: 1px solid rgba(212,175,55,.4);
+      display: flex; align-items: center; justify-content: center;
+      transform: scale(0.6) rotate(-20deg);
+      opacity: 0;
+      transition: transform .35s .08s cubic-bezier(.22,1,.36,1),
+                  opacity   .35s .08s ease;
+    }
+    .gallery-overlay-icon svg { width: 12px; height: 12px; stroke: var(--gold); fill: none; stroke-width: 2; }
+
+    .gallery-item:hover .gallery-overlay-title { transform: translateY(0); opacity: 1; }
+    .gallery-item:hover .gallery-overlay-line  { width: 40px; }
+    .gallery-item:hover .gallery-overlay-icon  { transform: scale(1) rotate(0deg); opacity: 1; }
+
+    /* ── Breathing animation (idle) ── */
+    @keyframes galleryBreath {
+      0%, 100% { box-shadow: 0 0 0 rgba(212,175,55,0); }
+      50%       { box-shadow: 0 0 18px rgba(212,175,55,.1); }
+    }
+    .gallery-item { animation: galleryBreath 5s ease-in-out infinite; }
+    .gallery-item:nth-child(2n)  { animation-delay: 1s; }
+    .gallery-item:nth-child(3n)  { animation-delay: 2.2s; }
+    .gallery-item:nth-child(4n)  { animation-delay: 0.5s; }
+    .gallery-item:hover { animation: none; }
+
+    /* ── Placeholder (fallback si pas d'image) ── */
     .gallery-item-placeholder {
       width: 100%; height: 100%;
       display: flex;
@@ -1356,40 +1557,12 @@
       justify-content: center;
       gap: .5rem;
     }
-    .gallery-item-placeholder svg { width: 28px; height: 28px; stroke: var(--gold); fill: none; opacity: .5; }
-    .gallery-item-placeholder span {
-      font-size: .6rem;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: var(--grey-dark);
-    }
+    .gallery-item-placeholder svg   { width: 28px; height: 28px; stroke: var(--gold); fill: none; opacity: .5; }
+    .gallery-item-placeholder span  { font-size: .6rem; letter-spacing: .25em; text-transform: uppercase; color: var(--grey-dark); }
 
-    /* Image réelle dans la galerie */
-    .gallery-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    /* Image réelle dans la lightbox */
-    .lb-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
+    /* ── Image lightbox ── */
+    .lb-img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
-    .gallery-item-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity .3s;
-    }
-    .gallery-item-overlay svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; }
 
     /* Lightbox */
     #lightbox {
@@ -2515,48 +2688,20 @@
 
         <div class="ba-grid">
 
-          <!-- ══════════════════════════════════════
-               CARTE 1 — Fiition Beton
-               Pour remplacer : changez les attributs src des deux <img>
-          ══════════════════════════════════════ -->
+          <!-- ══════════════════════════════════════════
+               CARTE 1 — Chargement & livraison de bois
+               Remplacer images : modifiez les src des balises <img>
+          ══════════════════════════════════════════ -->
           <article class="ba-card reveal" style="transition-delay:.1s;">
             <div class="ba-compare" data-compare>
-              <!-- IMAGE AVANT carte 1 — remplacez src -->
-              <img class="ba-img-before"
-                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195578/IMG_20260426_104150_gjh3g2.jpg"
-                   alt="Avant — Finition Beton" loading="lazy">
-              <!-- IMAGE APRÈS carte 1 — remplacez src -->
-              <img class="ba-img-after"
-                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195577/IMG_20260426_104153_okcrdi.jpg"
-                   alt="Après — Finition Beton" loading="lazy">
-              <div class="ba-line" aria-hidden="true">
-                <div class="ba-handle">
-                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </div>
-              </div>
-              <span class="ba-lbl ba-lbl-b">Avant</span>
-              <span class="ba-lbl ba-lbl-a">Après</span>
-            </div>
-            <div class="ba-info">
-              <div class="ba-service-name">Finition Beton</div>
-              <div class="ba-service-desc">Remise en état complète après petit œuvre — sol, murs, menuiseries</div>
-            </div>
-          </article>
-
-          <!-- ══════════════════════════════════════
-               CARTE 2 — Chargemment et livraiment et rangement de bois 
-          ══════════════════════════════════════ -->
-          <article class="ba-card reveal" style="transition-delay:.15s;">
-            <div class="ba-compare" data-compare>
-              <!-- IMAGE AVANT carte 2 — remplacez src -->
+              <!-- IMAGE AVANT carte 1 -->
               <img class="ba-img-before"
                    src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195825/IMG_20260426_104156_eewqgp.jpg"
-                   alt="Avant — Chargement+Livraison" loading="lazy">
-              <!-- IMAGE APRÈS carte 2 — remplacez src -->
+                   alt="Avant — Chargement de bois">
+              <!-- IMAGE APRÈS carte 1 -->
               <img class="ba-img-after"
                    src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195825/IMG_20260426_104159_wxx5b5.jpg"
-                   alt="Après — Aprés livraison et rangement" loading="lazy">
+                   alt="Après — Rangement bois domicile">
               <div class="ba-line" aria-hidden="true">
                 <div class="ba-handle">
                   <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -2565,26 +2710,28 @@
               </div>
               <span class="ba-lbl ba-lbl-b">Avant</span>
               <span class="ba-lbl ba-lbl-a">Après</span>
+              <div class="ba-hint" aria-hidden="true">Glissez</div>
             </div>
             <div class="ba-info">
-              <div class="ba-service-name">Livraison bois et rangement</div>
-              <div class="ba-service-desc">Livraison bois et rangement</div>
+              <span class="ba-num">01</span>
+              <div class="ba-service-name">Chargement & livraison de bois</div>
+              <div class="ba-service-desc">Transport, livraison et rangement soigné à domicile.</div>
             </div>
           </article>
 
-          <!-- ══════════════════════════════════════
-               CARTE 3 — Remise en état
-          ══════════════════════════════════════ -->
-          <article class="ba-card reveal" style="transition-delay:.2s;">
+          <!-- ══════════════════════════════════════════
+               CARTE 2 — Finition béton & petit œuvre
+          ══════════════════════════════════════════ -->
+          <article class="ba-card reveal" style="transition-delay:.18s;">
             <div class="ba-compare" data-compare>
-              <!-- IMAGE AVANT carte 3 — remplacez src -->
+              <!-- IMAGE AVANT carte 2 -->
               <img class="ba-img-before"
-                   src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80"
-                   alt="Avant — Remise en état" loading="lazy">
-              <!-- IMAGE APRÈS carte 3 — remplacez src -->
+                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195578/IMG_20260426_104150_gjh3g2.jpg"
+                   alt="Avant — Finition béton">
+              <!-- IMAGE APRÈS carte 2 -->
               <img class="ba-img-after"
-                   src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80"
-                   alt="Après — Remise en état" loading="lazy">
+                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777105753/Snapchat-1615421029_b24cxk.jpg"
+                   alt="Après — Finition béton">
               <div class="ba-line" aria-hidden="true">
                 <div class="ba-handle">
                   <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -2593,10 +2740,42 @@
               </div>
               <span class="ba-lbl ba-lbl-b">Avant</span>
               <span class="ba-lbl ba-lbl-a">Après</span>
+              <div class="ba-hint" aria-hidden="true">Glissez</div>
             </div>
             <div class="ba-info">
-              <div class="ba-service-name">Remise en état</div>
-              <div class="ba-service-desc">Appartement post-locataire — prêt pour la prochaine visite</div>
+              <span class="ba-num">02</span>
+              <div class="ba-service-name">Finition béton & petit œuvre</div>
+              <div class="ba-service-desc">Travaux de finition précis avec rendu propre et durable.</div>
+            </div>
+          </article>
+
+          <!-- ══════════════════════════════════════════
+               CARTE 3 — Nettoyage chantier
+          ══════════════════════════════════════════ -->
+          <article class="ba-card reveal" style="transition-delay:.26s;">
+            <div class="ba-compare" data-compare>
+              <!-- IMAGE AVANT carte 3 -->
+              <img class="ba-img-before"
+                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777196663/IMG_20260426_114040_iadhaq.jpg"
+                   alt="Avant — Nettoyage chantier">
+              <!-- IMAGE APRÈS carte 3 -->
+              <img class="ba-img-after"
+                   src="https://res.cloudinary.com/dkm8cbylh/image/upload/v1777213979/IMG_20260426_163151_we04j7.jpg"
+                   alt="Après — Nettoyage chantier">
+              <div class="ba-line" aria-hidden="true">
+                <div class="ba-handle">
+                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+              </div>
+              <span class="ba-lbl ba-lbl-b">Avant</span>
+              <span class="ba-lbl ba-lbl-a">Après</span>
+              <div class="ba-hint" aria-hidden="true">Glissez</div>
+            </div>
+            <div class="ba-info">
+              <span class="ba-num">03</span>
+              <div class="ba-service-name">Nettoyage chantier</div>
+              <div class="ba-service-desc">Remise en état complète après intervention ou travaux.</div>
             </div>
           </article>
 
@@ -2622,8 +2801,7 @@
         </div>
       </div>
 
-      <!-- REMPLACER ICI LES IMAGES DE LA GALERIE -->
-      <!-- Pour utiliser vos propres photos : remplacez les divs .gallery-item-placeholder par des balises <img src="votre-photo.jpg" alt="description"> -->
+      <!-- GALERIE PREMIUM — pour remplacer une image, modifiez l'attribut src de la balise <img> correspondante -->
       <div class="gallery-marquee-wrap" style="margin-bottom:1.5rem;">
         <div class="gallery-track" id="track1">
           <!-- Les items sont dupliqués par JS pour la boucle infinie -->
@@ -3215,79 +3393,49 @@
     }
 
     /* ============================================================
-       GALLERY
+       GALLERY — IMAGES RÉELLES + MOTION PREMIUM
     ============================================================ */
     const galleryItems = [
-      // 👉 Remplacez uniquement les URL "image" pour changer les photos.
+      // ↓ Pour remplacer une image : modifiez uniquement la valeur de "image"
       {
-        label: 'Structure bois ',
-        image: 'https://res.cloudinary.com/dkm8cbylh/image/upload/v1777105710/IMG_20260425_094252_hdvfzx.heic',
-        icon: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>'
-      },
-      {
-        label: 'Livraison Bois',
+        label: 'Livraison bois',
         image: 'https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195825/IMG_20260426_104156_eewqgp.jpg',
-        icon: '<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>'
       },
       {
-        label: 'Finition beton',
-        image: 'https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195577/IMG_20260426_104153_okcrdi.jpg',
-        icon: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>'
+        label: 'Rangement bois domicile',
+        image: 'https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195825/IMG_20260426_104159_wxx5b5.jpg',
       },
       {
-        label: 'Nettoyage de chantier',
+        label: 'Nettoyage chantier',
         image: 'https://res.cloudinary.com/dkm8cbylh/image/upload/v1777196663/IMG_20260426_114040_iadhaq.jpg',
-        icon: '<circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/><path d="M2 12h20"/>'
       },
       {
-        label: 'Outils pro',
-        image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=700&q=80',
-        icon: '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>'
+        label: 'Finition béton',
+        image: 'https://res.cloudinary.com/dkm8cbylh/image/upload/v1777195577/IMG_20260426_104153_okcrdi.jpg',
       },
       {
-        label: 'Finition premium',
-        image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=700&q=80',
-        icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
-      },
-      {
-        label: 'Entretien locaux',
-        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80',
-        icon: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>'
-      },
-      {
-        label: 'Remise en état',
-        image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=700&q=80',
-        icon: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>'
+        label: 'Structure bois',
+        image: 'https://res.cloudinary.com/dkm8cbylh/image/upload/v1777111788/IMG_20260425_094252_d0ciwz.jpg',
       },
     ];
 
-    const gradients = [
-      'linear-gradient(135deg, #1a1408, #2a1f0a)',
-      'linear-gradient(135deg, #0f0f0f, #1a1a1a)',
-      'linear-gradient(135deg, #151208, #221a0a)',
-      'linear-gradient(135deg, #0a0a0a, #181512)',
-    ];
-
-    function buildGalleryItem(item, index) {
+    function buildGalleryItem(item) {
       const div = document.createElement('div');
       div.className = 'gallery-item';
       div.setAttribute('tabindex', '0');
       div.setAttribute('role', 'button');
-      div.setAttribute('aria-label', 'Voir ' + item.label);
-      const bg = gradients[index % gradients.length];
-
-      // Contenu interne : image réelle ou placeholder SVG
-      const inner = item.image
-        ? `<img class="gallery-img" src="${item.image}" alt="${item.label}" loading="lazy">`
-        : `<div class="gallery-item-placeholder" style="background:${bg};">
-             <svg width="28" height="28" viewBox="0 0 24 24" stroke-width="1.2" stroke="rgba(212,175,55,.5)" fill="none">${item.icon}</svg>
-             <span>${item.label}</span>
-           </div>`;
+      div.setAttribute('aria-label', 'Voir — ' + item.label);
 
       div.innerHTML = `
-        <div class="gallery-item-img">${inner}</div>
+        <div class="gallery-item-img">
+          <img class="gallery-img" src="${item.image}" alt="${item.label}" loading="lazy">
+        </div>
         <div class="gallery-item-overlay">
-          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M15 3h6v6M14 10l6-7M9 21H3v-6M10 14l-7 7"/></svg>
+          <div class="gallery-overlay-icon">
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M14 10l6-7M9 21H3v-6M10 14l-7 7"/></svg>
+          </div>
+          <span class="gallery-overlay-title">${item.label}</span>
+          <div class="gallery-overlay-line"></div>
         </div>`;
       return div;
     }
@@ -3298,7 +3446,7 @@
       if (!track) return;
       const items = row === 1 ? galleryItems : [...galleryItems].reverse();
       [...items, ...items].forEach((item, i) => {
-        const el = buildGalleryItem(item, i);
+        const el = buildGalleryItem(item);
         el.addEventListener('click',  () => openLightbox(i % galleryItems.length));
         el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i % galleryItems.length); } });
         track.appendChild(el);
@@ -3331,21 +3479,10 @@
     function updateLightbox() {
       const item = galleryItems[currentLightboxIndex];
       const wrap = document.getElementById('lightboxImgWrap');
-      lightboxCaption.textContent = item.label;
-
-      if (item.image) {
-        wrap.innerHTML = `
-          <img class="lb-img" src="${item.image}" alt="${item.label}">
-          <span id="lightboxCaption">${item.label}</span>`;
-      } else {
-        wrap.innerHTML = `
-          <div class="lb-placeholder">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-            <span id="lightboxCaption">${item.label}</span>
-          </div>`;
-      }
-      // Reassign reference after DOM rebuild
-      lightboxCaption = document.getElementById('lightboxCaption');
+      wrap.innerHTML = `
+        <img class="lb-img" src="${item.image}" alt="${item.label}">`;
+      const cap = document.querySelector('.lightbox-caption');
+      if (cap) cap.textContent = item.label;
     }
 
     function prevLightbox() {
@@ -3479,23 +3616,54 @@
     });
 
     /* ============================================================
-       AVANT / APRÈS — COMPARATEUR GLISSANT (3 cartes)
+       AVANT / APRÈS — COMPARATEUR LUXE
     ============================================================ */
     (function () {
       document.querySelectorAll('[data-compare]').forEach(function (wrap) {
         var imgAfter = wrap.querySelector('.ba-img-after');
         var line     = wrap.querySelector('.ba-line');
+        var handle   = wrap.querySelector('.ba-handle');
         var card     = wrap.closest('.ba-card');
         var active   = false;
+        var pct      = 50;
 
         function setPos(clientX) {
           var rect = wrap.getBoundingClientRect();
-          var pct  = Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
-          line.style.left            = pct + '%';
-          imgAfter.style.clipPath    = 'inset(0 ' + (100 - pct) + '% 0 0)';
+          pct = Math.min(97, Math.max(3, ((clientX - rect.left) / rect.width) * 100));
+          line.style.left         = pct + '%';
+          imgAfter.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+          /* Marque comme utilisé → cache le hint */
+          wrap.classList.add('ba-used');
         }
 
-        /* Souris */
+        /* ── Entrée animée au scroll (IntersectionObserver) ── */
+        var hasAnimated = false;
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting || hasAnimated) return;
+            hasAnimated = true;
+            /* Petit demo : barre part de 20 % → 50 % */
+            var start  = Date.now();
+            var from   = 20;
+            var to     = 50;
+            var dur    = 1000;
+            function step() {
+              var t = Math.min(1, (Date.now() - start) / dur);
+              var ease = 1 - Math.pow(1 - t, 4);
+              var v = from + (to - from) * ease;
+              line.style.left         = v + '%';
+              imgAfter.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+              if (t < 1) requestAnimationFrame(step);
+              else { pct = to; }
+            }
+            /* Délai basé sur l'index de la carte */
+            var idx = Array.from(document.querySelectorAll('[data-compare]')).indexOf(wrap);
+            setTimeout(function () { requestAnimationFrame(step); }, 300 + idx * 200);
+          });
+        }, { threshold: 0.35 });
+        io.observe(card);
+
+        /* ── Souris ── */
         wrap.addEventListener('mousedown', function (e) {
           active = true;
           card.classList.add('ba-dragging');
@@ -3503,7 +3671,8 @@
           e.preventDefault();
         });
         window.addEventListener('mousemove', function (e) {
-          if (active) setPos(e.clientX);
+          if (!active) return;
+          setPos(e.clientX);
         });
         window.addEventListener('mouseup', function () {
           if (!active) return;
@@ -3511,15 +3680,21 @@
           card.classList.remove('ba-dragging');
         });
 
-        /* Tactile */
+        /* ── Tactile ── */
         wrap.addEventListener('touchstart', function (e) {
           active = true;
+          card.classList.add('ba-dragging');
           setPos(e.touches[0].clientX);
         }, { passive: true });
         wrap.addEventListener('touchmove', function (e) {
-          if (active) setPos(e.touches[0].clientX);
+          if (!active) return;
+          setPos(e.touches[0].clientX);
+          e.stopPropagation();
         }, { passive: true });
-        wrap.addEventListener('touchend', function () { active = false; });
+        wrap.addEventListener('touchend', function () {
+          active = false;
+          card.classList.remove('ba-dragging');
+        });
       });
     })();
 
